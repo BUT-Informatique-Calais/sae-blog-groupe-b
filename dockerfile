@@ -1,7 +1,8 @@
 FROM php:8.2-apache
 
 RUN apt-get update && apt-get install -y \
-    git unzip zip libpq-dev libicu-dev libzip-dev libonig-dev \
+    git unzip zip \
+    libpq-dev libicu-dev libzip-dev libonig-dev \
     curl gnupg && \
     docker-php-ext-install intl pdo pdo_pgsql zip && \
     a2enmod rewrite
@@ -17,7 +18,7 @@ WORKDIR /var/www/html
 
 COPY . /var/www/html/
 
-RUN composer install --no-interaction
+RUN composer install --no-interaction --prefer-dist --no-progress --optimize-autoloader
 
 RUN if [ -f package.json ]; then npm install && npm run build; fi
 
